@@ -1,14 +1,14 @@
 import os
 import itertools
 
-from aql_tests import AqlTestCase
+from tools_testcase import ToolTestCase
 
 from aql import Tempfile, Tempdir, Project, ProjectConfig
 
 # ==============================================================================
 
 
-class TestToolGcc(AqlTestCase):
+class TestToolGcc(ToolTestCase):
 
     # -----------------------------------------------------------
 
@@ -28,7 +28,7 @@ class TestToolGcc(AqlTestCase):
 
             prj = Project(cfg)
 
-            tools_path = os.path.join(os.path.dirname(__file__), '../../tools')
+            tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             gcc = prj.tools.try_tool('g++', tools_path=tools_path)
             if gcc is None:
                 print("WARNING: GCC tool has not been found. Skip the test.")
@@ -67,7 +67,7 @@ class TestToolGcc(AqlTestCase):
             cfg = ProjectConfig(args=["build_dir=%s" % build_dir])
 
             prj = Project(cfg)
-            tools_path = os.path.join(os.path.dirname(__file__), '../../tools')
+            tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             gcc = prj.tools.try_tool('g++', tools_path=tools_path)
             if gcc is None:
                 print("WARNING: GCC tool has not been found. Skip the test.")
@@ -121,7 +121,7 @@ class TestToolGcc(AqlTestCase):
             cfg = ProjectConfig(args=["build_dir=%s" % build_dir])
 
             prj = Project(cfg)
-            tools_path = os.path.join(os.path.dirname(__file__), '../../tools')
+            tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             gcc = prj.tools.try_tool('g++', tools_path=tools_path)
             if gcc is None:
                 print("WARNING: GCC tool has not been found. Skip the test.")
@@ -164,7 +164,7 @@ class TestToolGcc(AqlTestCase):
             cfg = ProjectConfig(args=["build_dir=%s" % build_dir])
 
             prj = Project(cfg)
-            tools_path = os.path.join(os.path.dirname(__file__), '../../tools')
+            tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             gcc = prj.tools.try_tool('g++', tools_path=tools_path)
             if gcc is None:
                 print("WARNING: GCC tool has not been found. Skip the test.")
@@ -214,7 +214,7 @@ class TestToolGcc(AqlTestCase):
 
             prj = Project(cfg)
 
-            tools_path = os.path.join(os.path.dirname(__file__), '../../tools')
+            tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             cpp = prj.tools.try_tool('g++', tools_path=tools_path)
             if cpp is None:
                 print("WARNING: GCC tool has not been found. Skip the test.")
@@ -265,7 +265,7 @@ class TestToolGcc(AqlTestCase):
 
             prj = Project(cfg)
 
-            tools_path = os.path.join(os.path.dirname(__file__), '../../tools')
+            tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             cpp = prj.tools.try_tool('g++', tools_path=tools_path)
             if cpp is None:
                 print("WARNING: GCC tool has not been found. Skip the test.")
@@ -314,7 +314,7 @@ class TestToolGcc(AqlTestCase):
 
             prj = Project(cfg)
 
-            tools_path = os.path.join(os.path.dirname(__file__), '../../tools')
+            tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             cpp = prj.tools.try_tool('g++', tools_path=tools_path)
             if cpp is None:
                 print("WARNING: g++ tool has not been found. Skip the test.")
@@ -364,8 +364,7 @@ class TestToolGcc(AqlTestCase):
 
             prj = Project(cfg)
 
-            tools_path = os.path.join(os.path.dirname(__file__),
-                                      '../../tools')
+            tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             cpp = prj.tools.try_tool('g++', tools_path=tools_path)
             if cpp is None:
                 print("WARNING: g++ tool has not been found. Skip the test.")
@@ -400,7 +399,7 @@ class TestToolGcc(AqlTestCase):
             cfg = ProjectConfig(args=["build_dir=%s" % build_dir])
 
             prj = Project(cfg)
-            tools_path = os.path.join(os.path.dirname(__file__), '../../tools')
+            tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             gcc = prj.tools.try_tool('g++', tools_path=tools_path)
             if gcc is None:
                 print("WARNING: GCC tool has not been found. Skip the test.")

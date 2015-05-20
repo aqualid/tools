@@ -1,14 +1,13 @@
 import os
-import sys
 
-from aql_tests import AqlTestCase
+from tools_testcase import ToolTestCase
 
 from aql import Tempdir, Tempfile, Project, ProjectConfig
 
 # ==============================================================================
 
 
-class TestToolMsvc(AqlTestCase):
+class TestToolMsvc(ToolTestCase):
 
     def test_msvc_compiler(self):
         with Tempdir() as tmp_dir:
@@ -29,7 +28,7 @@ class TestToolMsvc(AqlTestCase):
 
             prj = Project(cfg)
 
-            tools_path = os.path.join(os.path.dirname(__file__), '../../tools')
+            tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             cpp = prj.tools.try_tool('msvc++', tools_path=tools_path)
             if cpp is None:
                 print("WARNING: MSVC tool has not been found. Skip the test.")
@@ -72,7 +71,7 @@ class TestToolMsvc(AqlTestCase):
             prj = Project(cfg)
 
             tools_path = os.path.join(os.path.dirname(__file__),
-                                      '../../tools')
+                                      '../tools')
             cpp = prj.tools.try_tool('msvc++', tools_path=tools_path)
             if cpp is None:
                 print("WARNING: MSVC tool has not been found. Skip the test.")
@@ -119,7 +118,7 @@ class TestToolMsvc(AqlTestCase):
 
             prj = Project(cfg)
 
-            tools_path = os.path.join(os.path.dirname(__file__), '../../tools')
+            tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             cpp = prj.tools.try_tool('msvc++', tools_path=tools_path)
             if cpp is None:
                 print("WARNING: MSVC tool has not been found. Skip the test.")
@@ -157,7 +156,7 @@ class TestToolMsvc(AqlTestCase):
 
             prj = Project(cfg)
 
-            tools_path = os.path.join(os.path.dirname(__file__), '../../tools')
+            tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             cpp = prj.tools.try_tool('msvc++', tools_path=tools_path)
             if cpp is None:
                 print("WARNING: MSVC tool has not been found. Skip the test.")
@@ -209,7 +208,7 @@ class TestToolMsvc(AqlTestCase):
 
             prj = Project(cfg)
 
-            tools_path = os.path.join(os.path.dirname(__file__), '../../tools')
+            tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             cpp = prj.tools.try_tool('msvc++', tools_path=tools_path)
             if cpp is None:
                 print("WARNING: MSVC tool has not been found. Skip the test.")
@@ -260,13 +259,13 @@ class TestToolMsvc(AqlTestCase):
             cfg = ProjectConfig(args=["build_dir=%s" % build_dir])
 
             prj = Project(cfg)
-            tools_path = os.path.join(os.path.dirname(__file__), '../../tools')
+            tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             cpp = prj.tools.try_tool('msvc++', tools_path=tools_path)
             if cpp is None:
                 print("WARNING: MSVC tool has not been found. Skip the test.")
                 return
 
-            tools_path = os.path.join(os.path.dirname(__file__), '../../tools')
+            tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             rc = prj.tools.try_tool('msrc', tools_path=tools_path)
             if rc is None:
                 print("WARNING: MS RC tool has not been found. Skip the test.")

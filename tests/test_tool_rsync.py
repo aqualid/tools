@@ -1,7 +1,6 @@
 import os
-import sys
 
-from aql_tests import AqlTestCase
+from tools_testcase import ToolTestCase
 
 from aql import Tempdir, Project, ProjectConfig
 
@@ -16,7 +15,7 @@ def _build(prj):
 # ==============================================================================
 
 
-class TestToolRsync(AqlTestCase):
+class TestToolRsync(ToolTestCase):
 
     def test_rsync_push_local(self):
         with Tempdir() as tmp_dir:
@@ -29,7 +28,7 @@ class TestToolRsync(AqlTestCase):
                     prj = Project(cfg)
 
                     tools_path = os.path.join(os.path.dirname(__file__),
-                                              '../../tools')
+                                              '../tools')
                     rsync = prj.tools.get_tool('rsync',
                                                tools_path=tools_path)
                     if rsync is None:
@@ -58,7 +57,7 @@ class TestToolRsync(AqlTestCase):
                 prj = Project(cfg)
 
                 tools_path = os.path.join(os.path.dirname(__file__),
-                                          '../../tools')
+                                          '../tools')
                 rsync = prj.tools.get_tool('rsync', tools_path=tools_path)
 
                 key_file = r'C:\cygwin\home\me\rsync.key',
@@ -85,7 +84,7 @@ class TestToolRsync(AqlTestCase):
                     prj = Project(cfg)
 
                     tools_path = os.path.join(os.path.dirname(__file__),
-                                              '../../tools')
+                                              '../tools')
                     rsync = prj.tools.get_tool('rsync',
                                                tools_path=tools_path)
                     if rsync is None:
