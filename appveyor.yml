@@ -15,6 +15,9 @@ install:
 
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;C:\\MinGW\\bin;%PATH%"
 
+  - git clone --depth 1 https://github.com/aqualid/aqualid.git
+  - "SET PYTHONPATH=%dp0\\aqualid;%PYTHONPATH%;"
+
 build: off
 
 test_script:
