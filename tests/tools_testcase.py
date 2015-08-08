@@ -4,11 +4,11 @@ import shutil
 
 import pytest
 
-from aql import Tempfile, add_user_handler, remove_user_handler, \
-    enable_default_handlers, FilePath, NodeEntity
+from aql import add_user_handler, remove_user_handler, \
+    FilePath, NodeEntity
 
 
-#//===========================================================================//
+# ==============================================================================
 
 skip = pytest.mark.skipif("True")
 skipped = pytest.skip
@@ -207,7 +207,6 @@ class ToolTestCase(unittest.TestCase):
         add_user_handler(self.event_node_building_finished)
         add_user_handler(self.event_node_removed)
 
-
     # ==========================================================
 
     def tearDown(self):  # noqa
@@ -215,7 +214,6 @@ class ToolTestCase(unittest.TestCase):
         remove_user_handler(self.event_node_removed)
 
         super(ToolTestCase, self).tearDown()
-
 
     # ==========================================================
 
@@ -239,7 +237,6 @@ class ToolTestCase(unittest.TestCase):
         prj.clear()
 
         self.assertGreater(self.removed_nodes, 0)
-
 
     # ==========================================================
 

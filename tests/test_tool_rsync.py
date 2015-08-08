@@ -95,4 +95,3 @@ class TestToolRsync(ToolTestCase):
                     rsync.Pull(src_files, target=target_dir)
 
                     _build(prj)
-

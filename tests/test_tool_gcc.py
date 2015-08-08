@@ -412,6 +412,3 @@ class TestToolGcc(ToolTestCase):
                                 target=copy_dir,
                                 batch_groups=1)
             self.build_prj(prj, 0)
-
-# ==============================================================================
-

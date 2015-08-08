@@ -282,4 +282,3 @@ class TestToolMsvc(ToolTestCase):
             cpp.Compile(src_files, batch_build=False)
             rc.Compile(res_file)
             self.build_prj(prj, 0)
-
