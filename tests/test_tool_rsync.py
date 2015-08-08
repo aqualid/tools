@@ -1,6 +1,6 @@
 import os
 
-from tools_testcase import ToolTestCase
+from tools_testcase import ToolTestCase, skip, skipped
 
 from aql import Tempdir, Project, ProjectConfig
 
@@ -29,12 +29,10 @@ class TestToolRsync(ToolTestCase):
 
                     tools_path = os.path.join(os.path.dirname(__file__),
                                               '../tools')
-                    rsync = prj.tools.get_tool('rsync',
+                    rsync = prj.tools.try_tool('rsync',
                                                tools_path=tools_path)
                     if rsync is None:
-                        print("WARNING: Rsync tool has not been found. "
-                              "Skip the test.")
-                        return
+                        skipped("Rsync tool has not been found.")
 
                     rsync.Push(src_files, target=target_dir)
 
@@ -46,8 +44,8 @@ class TestToolRsync(ToolTestCase):
 
     # ==========================================================
 
-    #@skip
-    def _t_est_rsync_push_remote(self):
+    @skip
+    def test_rsync_push_remote(self):
         with Tempdir() as tmp_dir:
             with Tempdir() as src_dir:
                 # src_files = self.generate_cpp_files(src_dir, "src_test", 3)
@@ -85,12 +83,10 @@ class TestToolRsync(ToolTestCase):
 
                     tools_path = os.path.join(os.path.dirname(__file__),
                                               '../tools')
-                    rsync = prj.tools.get_tool('rsync',
+                    rsync = prj.tools.try_tool('rsync',
                                                tools_path=tools_path)
                     if rsync is None:
-                        print("WARNING: Rsync tool has not been found. "
-                              "Skip the test.")
-                        return
+                        skipped("Rsync tool has not been found.")
 
                     rsync.Pull(src_files, target=target_dir)
 
