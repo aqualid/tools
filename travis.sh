@@ -1,6 +1,6 @@
 set -ex
 
-git clone --depth 1 https://github.com/aqualid/aqualid.git
+git clone -b pytest --depth 1 https://github.com/aqualid/aqualid.git
 
 PYTHONPATH=$PWD/aqualid coverage run --source=tools tests/run.py
 
