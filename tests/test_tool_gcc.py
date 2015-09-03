@@ -1,7 +1,7 @@
 import os
 import itertools
 
-from tools_testcase import ToolTestCase
+from tools_testcase import ToolTestCase, skipped
 
 from aql import Tempfile, Tempdir, Project, ProjectConfig
 
@@ -31,8 +31,7 @@ class TestToolGcc(ToolTestCase):
             tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             gcc = prj.tools.try_tool('g++', tools_path=tools_path)
             if gcc is None:
-                print("WARNING: GCC tool has not been found. Skip the test.")
-                return
+                skipped("WARNING: GCC tool has not been found.")
 
             gcc.Compile(src_files, batch_build=False)
             self.build_prj(prj, num_src_files)
@@ -70,8 +69,7 @@ class TestToolGcc(ToolTestCase):
             tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             gcc = prj.tools.try_tool('g++', tools_path=tools_path)
             if gcc is None:
-                print("WARNING: GCC tool has not been found. Skip the test.")
-                return
+                skipped("WARNING: GCC tool has not been found.")
 
             gcc.options.batch_build = False
             gcc.options.If().target.is_true().objsuffix = ''
@@ -124,8 +122,7 @@ class TestToolGcc(ToolTestCase):
             tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             gcc = prj.tools.try_tool('g++', tools_path=tools_path)
             if gcc is None:
-                print("WARNING: GCC tool has not been found. Skip the test.")
-                return
+                skipped("GCC tool has not been found.")
 
             gcc.Compile(src_files, target='src_file0', batch_build=False)
 
@@ -167,14 +164,11 @@ class TestToolGcc(ToolTestCase):
             tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             gcc = prj.tools.try_tool('g++', tools_path=tools_path)
             if gcc is None:
-                print("WARNING: GCC tool has not been found. Skip the test.")
-                return
+                skipped("GCC tool has not been found.")
 
             rc = prj.tools.try_tool('windres', tools_path=tools_path)
             if rc is None:
-                print("WARNING: Windres tool has not been found. "
-                      "Skip the test.")
-                return
+                skipped("Windres tool has not been found.")
 
             gcc.Compile(src_files, batch_build=False)
             rc.Compile(res_file)
@@ -217,8 +211,7 @@ class TestToolGcc(ToolTestCase):
             tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             cpp = prj.tools.try_tool('g++', tools_path=tools_path)
             if cpp is None:
-                print("WARNING: GCC tool has not been found. Skip the test.")
-                return
+                skipped("GCC tool has not been found.")
 
             cpp.LinkLibrary(src_files, target='foo', batch_build=False)
 
@@ -268,8 +261,7 @@ class TestToolGcc(ToolTestCase):
             tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             cpp = prj.tools.try_tool('g++', tools_path=tools_path)
             if cpp is None:
-                print("WARNING: GCC tool has not been found. Skip the test.")
-                return
+                skipped("GCC tool has not been found.")
 
             cpp.LinkSharedLibrary(src_files, target='foo')
             cpp.LinkSharedLibrary(src_files, target='foo')
@@ -317,8 +309,7 @@ class TestToolGcc(ToolTestCase):
             tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             cpp = prj.tools.try_tool('g++', tools_path=tools_path)
             if cpp is None:
-                print("WARNING: g++ tool has not been found. Skip the test.")
-                return
+                skipped("g++ tool has not been found.")
 
             cpp.Compile(src_files, batch_build=True)
             self.build_prj(prj, num_groups, jobs=num_groups)
@@ -367,8 +358,7 @@ class TestToolGcc(ToolTestCase):
             tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             cpp = prj.tools.try_tool('g++', tools_path=tools_path)
             if cpp is None:
-                print("WARNING: g++ tool has not been found. Skip the test.")
-                return
+                skipped("g++ tool has not been found.")
 
             cpp.Compile(src_files, batch_build=True, batch_groups=1)
 
@@ -402,8 +392,7 @@ class TestToolGcc(ToolTestCase):
             tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             gcc = prj.tools.try_tool('g++', tools_path=tools_path)
             if gcc is None:
-                print("WARNING: GCC tool has not been found. Skip the test.")
-                return
+                skipped("GCC tool has not been found.")
 
             node = gcc.Compile(src_files, batch_build=False)
             prj.tools.CopyFiles(node.filter_sources(),
@@ -423,6 +412,3 @@ class TestToolGcc(ToolTestCase):
                                 target=copy_dir,
                                 batch_groups=1)
             self.build_prj(prj, 0)
-
-# ==============================================================================
-

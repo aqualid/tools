@@ -1,6 +1,6 @@
 import os
 
-from tools_testcase import ToolTestCase
+from tools_testcase import ToolTestCase, skipped
 
 from aql import Tempdir, Tempfile, Project, ProjectConfig
 
@@ -31,7 +31,7 @@ class TestToolMsvc(ToolTestCase):
             tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             cpp = prj.tools.try_tool('msvc++', tools_path=tools_path)
             if cpp is None:
-                print("WARNING: MSVC tool has not been found. Skip the test.")
+                skipped("MSVC tool has not been found.")
                 return
 
             cpp.Compile(src_files, batch_build=False)
@@ -74,7 +74,7 @@ class TestToolMsvc(ToolTestCase):
                                       '../tools')
             cpp = prj.tools.try_tool('msvc++', tools_path=tools_path)
             if cpp is None:
-                print("WARNING: MSVC tool has not been found. Skip the test.")
+                skipped("MSVC tool has not been found.")
                 return
 
             cpp.Compile(src_files, batch_build=True)
@@ -121,8 +121,7 @@ class TestToolMsvc(ToolTestCase):
             tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             cpp = prj.tools.try_tool('msvc++', tools_path=tools_path)
             if cpp is None:
-                print("WARNING: MSVC tool has not been found. Skip the test.")
-                return
+                skipped("MSVC tool has not been found.")
 
             cpp.Compile(src_files, batch_build=True, batch_groups=1)
 
@@ -159,8 +158,7 @@ class TestToolMsvc(ToolTestCase):
             tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             cpp = prj.tools.try_tool('msvc++', tools_path=tools_path)
             if cpp is None:
-                print("WARNING: MSVC tool has not been found. Skip the test.")
-                return
+                skipped("MSVC tool has not been found.")
 
             cpp.LinkLibrary(src_files, res_file, target='foo',
                             batch_build=True, batch_groups=num_groups)
@@ -211,8 +209,7 @@ class TestToolMsvc(ToolTestCase):
             tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             cpp = prj.tools.try_tool('msvc++', tools_path=tools_path)
             if cpp is None:
-                print("WARNING: MSVC tool has not been found. Skip the test.")
-                return
+                skipped("MSVC tool has not been found.")
 
             cpp.LinkSharedLibrary(src_files, res_file, target='foo')
             cpp.LinkSharedLibrary(src_files, res_file, target='foo')
@@ -262,14 +259,12 @@ class TestToolMsvc(ToolTestCase):
             tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             cpp = prj.tools.try_tool('msvc++', tools_path=tools_path)
             if cpp is None:
-                print("WARNING: MSVC tool has not been found. Skip the test.")
-                return
+                skipped("MSVC tool has not been found.")
 
             tools_path = os.path.join(os.path.dirname(__file__), '../tools')
             rc = prj.tools.try_tool('msrc', tools_path=tools_path)
             if rc is None:
-                print("WARNING: MS RC tool has not been found. Skip the test.")
-                return
+                skipped("MS RC tool has not been found.")
 
             cpp.Compile(src_files, batch_build=False)
             rc.Compile(res_file)
@@ -287,4 +282,3 @@ class TestToolMsvc(ToolTestCase):
             cpp.Compile(src_files, batch_build=False)
             rc.Compile(res_file)
             self.build_prj(prj, 0)
-

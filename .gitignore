@@ -1,7 +1,10 @@
 # Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-
 .idea
+*.py[cod]
+*.prof
+**/__pycache__/
 **/output/
 **/build_output/
+make/install
+htmlcov
+.coverage
