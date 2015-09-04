@@ -122,7 +122,7 @@ def run(core_dir, tools_dir):
     ###############
     # test examples
     examples_dir = os.path.join(tools_dir, 'examples')
-    _run_cmd(["git", "clone", "-b", "pytest", "--depth", "1", "https://github.com/aqualid/examples.git", examples_dir])
+    _run_cmd(["git", "clone", "-b", "master", "--depth", "1", "https://github.com/aqualid/examples.git", examples_dir])
 
     module = _load_module('run_ci', examples_dir)
     module.run(core_dir, tools_dir, examples_dir)
@@ -134,7 +134,7 @@ def main():
     tools_dir = os.path.abspath(os.path.dirname(__file__))
     core_dir = os.path.join(tools_dir, 'aqualid')
 
-    _run_cmd(["git", "clone", "-b", "pytest", "--depth", "1", "https://github.com/aqualid/aqualid.git", core_dir])
+    _run_cmd(["git", "clone", "-b", "master", "--depth", "1", "https://github.com/aqualid/aqualid.git", core_dir])
 
     run(core_dir, tools_dir)
 
