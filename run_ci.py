@@ -6,9 +6,6 @@ import imp
 import uuid
 import subprocess
 
-import coverage
-import flake8.main
-
 
 # ==============================================================================
 def _find_files(path, recursive=True):
@@ -23,7 +20,7 @@ def _find_files(path, recursive=True):
 
         if recursive:
             folders[:] = (folder for folder in folders
-                            if not folder.startswith('.'))
+                          if not folder.startswith('.'))
         else:
             folders[:] = []
 
@@ -43,7 +40,13 @@ def _run_tests(core_dir, tests_dir, source_dir, with_coverage=True):
     module = _load_module('run', tests_dir)
 
     if with_coverage:
-        cov = coverage.coverage(source=[source_dir])
+        try:
+            import coverage
+        except ImportError:
+            print("WARNING: Module 'coverage' has not been found")
+            cov = None
+        else:
+            cov = coverage.coverage(source=[source_dir])
     else:
         cov = None
 
@@ -62,8 +65,14 @@ def _run_tests(core_dir, tests_dir, source_dir, with_coverage=True):
 
 
 # ==============================================================================
-def _run_flake8( source_files, ignore=None, complexity=-1):
-    if not isinstance(source_files, (list,tuple,frozenset,set)):
+def _run_flake8(source_files, ignore=None, complexity=-1):
+    try:
+        import flake8.main
+    except ImportError:
+        print("WARNING: Module 'flake8' has not been found")
+        return
+
+    if not isinstance(source_files, (list, tuple, frozenset, set)):
         source_files = (source_files,)
 
     ignore_errors = ('F403', 'E241')
@@ -114,7 +123,7 @@ def run(core_dir, tools_dir):
     _run_tests(core_dir, tests_dir, source_dir, with_coverage)
 
     # check for PEP8 violations, max complexity and other standards
-    _run_flake8(_find_files(source_dir), complexity = 9)
+    _run_flake8(_find_files(source_dir), complexity=9)
 
     # check for PEP8 violations
     _run_flake8(_find_files(tests_dir))
