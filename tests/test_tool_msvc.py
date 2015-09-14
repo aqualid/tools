@@ -100,6 +100,15 @@ class TestToolMsvc(ToolTestCase):
             build_dir = os.path.join(tmp_dir, 'output')
             src_dir = os.path.join(tmp_dir, 'src')
 
+            cfg = ProjectConfig(args=["build_dir=%s" % build_dir])
+
+            prj = Project(cfg)
+
+            tools_path = os.path.join(os.path.dirname(__file__), '../tools')
+            cpp = prj.tools.try_tool('msvc++', tools_path=tools_path)
+            if cpp is None:
+                skipped("MSVC tool has not been found.")
+
             os.makedirs(src_dir)
 
             num_src_files = 5
@@ -113,15 +122,6 @@ class TestToolMsvc(ToolTestCase):
             self.copy_file(src_files[0], src_file_orig)
 
             self.add_error_to_cpp_file(src_files[0])
-
-            cfg = ProjectConfig(args=["build_dir=%s" % build_dir])
-
-            prj = Project(cfg)
-
-            tools_path = os.path.join(os.path.dirname(__file__), '../tools')
-            cpp = prj.tools.try_tool('msvc++', tools_path=tools_path)
-            if cpp is None:
-                skipped("MSVC tool has not been found.")
 
             cpp.Compile(src_files, batch_build=True, batch_groups=1)
 

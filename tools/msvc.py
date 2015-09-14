@@ -13,7 +13,7 @@ from aql import execute_command, ListOptionType, PathOptionType, tool,\
 def _parse_output(source_paths,
                   output,
                   exclude_dirs,
-                  _err_re=re.compile(r".+\s+:\s+(fatal\s)?error\s+[0-9A-Z]+:")
+                  _err_re=re.compile(r".+\s*:\s+(fatal\s)?error\s+[0-9A-Z]+:")
                   ):
 
     gen_code = ("Generating Code...", "Compiling...")
