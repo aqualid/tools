@@ -5,6 +5,8 @@ from aql import execute_command, ListOptionType, PathOptionType, tool,\
     ToolCommonCpp, CommonCppCompiler, CommonCppArchiver,\
     CommonCppLinker, ToolCommonRes, CommonResCompiler
 
+from aql import file_signature
+
 # ==============================================================================
 #  BUILDERS IMPLEMENTATION
 # ==============================================================================
@@ -13,11 +15,14 @@ from aql import execute_command, ListOptionType, PathOptionType, tool,\
 def _parse_output(source_paths,
                   output,
                   exclude_dirs,
-                  _err_re=re.compile(r".+\s*:\s+(fatal\s)?error\s+[0-9A-Z]+:")
+
+                  # pattern for errors, works fine in all locales"
+                  _err_re=re.compile(r".+\s*:\s+(fatal\s)?error\s+[0-9A-Z]+:"),
+
+                  # locale agnostic pattern for "Note: including file:  "
+                  _inc_re=re.compile(r"[^\s]{3,40}:\s.{3,40}\s.{3,40}:\s(.+)")
                   ):
 
-    gen_code = ("Generating Code...", "Compiling...")
-    include_prefix = "Note: including file:"
     sources_deps = []
     sources_errors = []
 
@@ -32,6 +37,7 @@ def _parse_output(source_paths,
     current_file_failed = False
 
     for line in output.split('\n'):
+        line = line.rstrip()
         if line == next_name:
             if current_file is not None:
                 sources_deps.append(current_deps)
@@ -43,17 +49,18 @@ def _parse_output(source_paths,
 
             next_name = next(names, None)
 
-        elif line.startswith(include_prefix):
-            dep_file = line[len(include_prefix):].strip()
-            dep_file = os.path.normcase(os.path.abspath(dep_file))
-            if not dep_file.startswith(exclude_dirs):
-                current_deps.append(dep_file)
+        elif not line.endswith('...'):
+            m = _inc_re.match(line)
+            if m:
+                dep_file = m.group(1).strip()
+                dep_file = os.path.normcase(os.path.abspath(dep_file))
+                if not dep_file.startswith(exclude_dirs):
+                    current_deps.append(dep_file)
+            else:
+                if _err_re.match(line):
+                    current_file_failed = True
 
-        elif not line.startswith(gen_code):
-            if _err_re.match(line):
-                current_file_failed = True
-
-            filtered_output.append(line)
+                filtered_output.append(line)
 
     output = '\n'.join(filtered_output)
     sources_deps.append(current_deps)

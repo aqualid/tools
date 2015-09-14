@@ -151,7 +151,7 @@ class TestToolMsvc(ToolTestCase):
                 src_dir, 'foo', num_src_files)
             res_file = self.generate_res_file(src_dir, 'foo')
 
-            cfg = ProjectConfig(args=["build_dir=%s" % build_dir])
+            cfg = ProjectConfig(args=["build_dir=%s" % build_dir, "--debug-explain"])
 
             prj = Project(cfg)
 
