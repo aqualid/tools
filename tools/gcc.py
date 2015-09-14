@@ -70,7 +70,7 @@ class GccCompiler (CommonCppCompiler):
 
             implicit_deps = _read_deps(dep_file, self.ext_cpppath)
 
-            targets.add(obj_file)
+            targets.add_targets(obj_file)
             targets.add_implicit_deps(implicit_deps)
 
             return out
@@ -90,7 +90,7 @@ class GccCompiler (CommonCppCompiler):
                 implicit_deps = _read_deps(dep_file, self.ext_cpppath)
 
                 src_targets = targets[src_value]
-                src_targets.add(obj_file)
+                src_targets.add_targets(obj_file)
                 src_targets.add_implicit_deps(implicit_deps)
 
     # -----------------------------------------------------------
@@ -135,7 +135,7 @@ class GccResCompiler (CommonResCompiler):
 
         # deps = _parse_res( src )
 
-        targets.add(res_file)
+        targets.add_targets(res_file)
 
         return out
 
@@ -165,7 +165,7 @@ class GccArchiver (GccCompilerMaker, CommonCppArchiver):
 
         out = self.exec_cmd(cmd, cwd=cwd, file_flag='@')
 
-        targets.add(self.target)
+        targets.add_targets(self.target)
 
         return out
 
@@ -210,13 +210,13 @@ class GccLinker(GccCompilerMaker, CommonCppLinker):
         if shared:
             if import_lib:
                 tags = ('shlib',)
-                targets.add(import_lib, tags=('implib',))
+                targets.add_targets(import_lib, tags=('implib',))
             else:
                 tags = ('shlib', 'implib')
         else:
             tags = None
 
-        targets.add(target, tags=tags)
+        targets.add_targets(target, tags=tags)
 
         return out
 
