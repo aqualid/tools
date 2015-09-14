@@ -241,8 +241,8 @@ class RSyncPushBuilder(aql.FileBuilder):
         remote_path = self.remote_path
         source_base = self.source_base
 
-        value_type = aql.SimpleEntity if remote_path.is_remote(
-        ) else self.get_file_entity_type()
+        make_entity = self.make_simple_entity if remote_path.is_remote() \
+            else self.make_file_entity
 
         for src_value, src in zip(source_entities, sources):
 
@@ -251,8 +251,8 @@ class RSyncPushBuilder(aql.FileBuilder):
 
             target_path = remote_path.join(src)
 
-            target_value = value_type(target_path.get())
-            targets[src_value].add(target_value)
+            target_entity = make_entity(target_path.get())
+            targets[src_value].add_target_entity(target_entity)
 
     # -----------------------------------------------------------
 
@@ -336,13 +336,13 @@ class RSyncPullBuilder(aql.Builder):
 
     # -----------------------------------------------------------
 
-    def make_entity(self, value):
+    def make_entity(self, value, tags=None):
         if aql.is_string(value):
             remote_path = RemotePath(value, self.login, self.host)
             if not remote_path.is_remote():
-                return self.make_file_entity(value)
+                return self.make_file_entity(value, tags)
 
-        return self.make_simple_entity(value)
+        return self.make_simple_entity(value, tags)
 
     # -----------------------------------------------------------
 
@@ -409,7 +409,7 @@ class RSyncPullBuilder(aql.Builder):
 
         out = self.exec_cmd(cmd)
 
-        targets.add_files(target_files)
+        targets.add_target_files(target_files)
 
         return out
 

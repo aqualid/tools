@@ -91,7 +91,7 @@ class MsvcCompiler (CommonCppCompiler):
             result.output = out
             raise result
 
-        targets.add(obj_file)
+        targets.add_targets(obj_file)
         targets.add_implicit_deps(deps[0])
 
         return out
@@ -117,7 +117,7 @@ class MsvcCompiler (CommonCppCompiler):
         for src_value, obj_file, deps, error in items:
             if not error:
                 src_targets = targets[src_value]
-                src_targets.add(obj_file)
+                src_targets.add_targets(obj_file)
                 src_targets.add_implicit_deps(deps)
 
         return out
@@ -165,7 +165,7 @@ class MsvcResCompiler (CommonResCompiler):
 
         # deps = _parse_res( src )
 
-        targets.add(res_file)
+        targets.add_targets(res_file)
 
         return out
 
@@ -197,7 +197,7 @@ class MsvcArchiver (MsvcCompilerMaker, CommonCppArchiver):
 
         out = self.exec_cmd(cmd, cwd=cwd, file_flag='@')
 
-        targets.add(self.target)
+        targets.add_targets(self.target)
 
         return out
 
@@ -254,13 +254,13 @@ class MsvcLinker (MsvcCompilerMaker, CommonCppLinker):
         else:
             tags = 'shlib'
             if os.path.exists(import_lib):
-                targets.add(import_lib, tags='implib')
+                targets.add_targets(import_lib, tags='implib')
 
             exports_lib = os.path.splitext(target)[0] + '.exp'
             if os.path.exists(exports_lib):
                 itargets.append(exports_lib)
 
-        targets.add(target, tags=tags)
+        targets.add_targets(target, tags=tags)
         targets.add_side_effects(itargets)
 
         return out
