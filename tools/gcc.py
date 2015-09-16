@@ -114,7 +114,7 @@ class GccCompiler (CommonCppCompiler):
         if result.failed():
             raise result
 
-        return result.output
+        return result.output()
 
 # ==============================================================================
 
@@ -253,10 +253,10 @@ def _get_target_os(target_os):
 # ==============================================================================
 def _get_gcc_specs(gcc):
     result = execute_command([gcc, '-dumpmachine'])
-    target = result.output.strip()
+    target = result.stdout.strip()
 
     result = execute_command([gcc, '-dumpversion'])
-    version = result.output.strip()
+    version = result.stdout.strip()
 
     target_list = target.split('-', 1)
 

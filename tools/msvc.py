@@ -1,11 +1,11 @@
 import os
 import re
 
-from aql import execute_command, ListOptionType, PathOptionType, tool,\
+from aql import execute_command, FilePartChecksumEntity, FileTimestampEntity,\
+    ListOptionType, PathOptionType, tool,\
     ToolCommonCpp, CommonCppCompiler, CommonCppArchiver,\
     CommonCppLinker, ToolCommonRes, CommonResCompiler
 
-from aql import file_signature
 
 # ==============================================================================
 #  BUILDERS IMPLEMENTATION
@@ -15,13 +15,13 @@ from aql import file_signature
 def _parse_output(source_paths,
                   output,
                   exclude_dirs,
+                  inc_prefix="Note: including file: ",
 
                   # pattern for errors, works fine in all locales"
                   _err_re=re.compile(r".+\s*:\s+(fatal\s)?error\s+[0-9A-Z]+:"),
-
-                  # locale agnostic pattern for "Note: including file:  "
-                  _inc_re=re.compile(r"[^\s]{3,40}:\s.{3,40}\s.{3,40}:\s(.+)")
                   ):
+
+    inc_prefix_len = len(inc_prefix)
 
     sources_deps = []
     sources_errors = []
@@ -50,9 +50,9 @@ def _parse_output(source_paths,
             next_name = next(names, None)
 
         elif not line.endswith('...'):
-            m = _inc_re.match(line)
-            if m:
-                dep_file = m.group(1).strip()
+
+            if line.startswith(inc_prefix):
+                dep_file = line[inc_prefix_len:].lstrip()
                 dep_file = os.path.normcase(os.path.abspath(dep_file))
                 if not dep_file.startswith(exclude_dirs):
                     current_deps.append(dep_file)
@@ -79,6 +79,13 @@ class MsvcCompiler (CommonCppCompiler):
 
     # -----------------------------------------------------------
 
+    def make_obj_entity(self, filename):
+        if self.use_timestamp:
+            return FileTimestampEntity(filename)
+        return FilePartChecksumEntity(filename, offset=16)
+
+    # -----------------------------------------------------------
+
     def build(self, source_entities, targets):
 
         source = source_entities[0].get()
@@ -92,13 +99,13 @@ class MsvcCompiler (CommonCppCompiler):
         result = self.exec_cmd_result(cmd, cwd, file_flag='@')
 
         deps, errors, out = _parse_output((source,),
-                                          result.output,
+                                          result.stdout,
                                           self.ext_cpppath)
         if result.failed():
-            result.output = out
+            result.stdout = out
             raise result
 
-        targets.add_targets(obj_file)
+        targets.add_target_entity(self.make_obj_entity(obj_file))
         targets.add_implicit_deps(deps[0])
 
         return out
@@ -124,7 +131,7 @@ class MsvcCompiler (CommonCppCompiler):
         for src_value, obj_file, deps, error in items:
             if not error:
                 src_targets = targets[src_value]
-                src_targets.add_targets(obj_file)
+                src_targets.add_target_entity(self.make_obj_entity(obj_file))
                 src_targets.add_implicit_deps(deps)
 
         return out
@@ -144,11 +151,11 @@ class MsvcCompiler (CommonCppCompiler):
 
         result = self.exec_cmd_result(cmd, cwd, file_flag='@')
 
-        out = self._set_targets(
-            source_entities, targets, sources, obj_files, result.output)
+        out = self._set_targets(source_entities, targets, sources, obj_files,
+                                result.stdout)
 
         if result.failed():
-            result.output = out
+            result.stdout = out
             raise result
 
         return out
@@ -283,19 +290,11 @@ def _get_msvc_specs(cl):
 
     result = execute_command(cl)
 
-    specs_re = re.compile(r'Compiler Version (?P<version>[0-9.]+) '
-                          r'for (?P<machine>[a-zA-Z0-9_-]+)',
-                          re.MULTILINE)
+    out = result.stderr.split('\n')
+    out = out[0].split()
 
-    out = result.output
-
-    match = specs_re.search(out)
-    if match:
-        target_arch = match.group('machine').strip()
-        version = match.group('version').strip()
-    else:
-        target_arch = 'x86-32'
-        version = ''
+    version = out[-3]
+    target_arch = out[-1]
 
     target_os = 'windows'
 
