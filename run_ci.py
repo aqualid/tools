@@ -4,6 +4,7 @@ import os
 import sys
 import imp
 import uuid
+import argparse
 import subprocess
 
 
@@ -138,8 +139,34 @@ def run(core_dir, tools_dir):
 
 
 # ==============================================================================
+def _parse_args(choices):
+    args_parser = argparse.ArgumentParser()
 
+    args_parser.add_argument('--skip', action='append', choices=choices,
+                             dest='skip_tests',
+                             help="Skip specific tests")
+
+    args_parser.add_argument('--run', action='append', choices=choices,
+                             dest='run_tests',
+                             help="Run specific tests")
+
+    return args_parser.parse_args()
+
+
+# ==============================================================================
 def main():
+    choices = ['tests', 'flake8', 'examples']
+
+    args = _parse_args(choices)
+
+    if args.run_tests is None:
+        run_tests = set(choices)
+    else:
+        run_tests = set(args.run_tests)
+
+    if args.skip_tests:
+        run_tests.difference_update(args.skip_tests)
+
     tools_dir = os.path.abspath(os.path.dirname(__file__))
     core_dir = os.path.join(tools_dir, 'aqualid')
 
