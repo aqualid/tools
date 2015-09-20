@@ -171,7 +171,7 @@ class TestToolMsvc(ToolTestCase):
             self.touch_cpp_file(hdr_files[0])
 
             cpp.LinkLibrary(src_files, res_file, target='foo')
-            self.build_prj(prj, 2)
+            self.build_prj(prj, 1)
 
             cpp.LinkLibrary(
                 src_files, res_file, target='foo', batch_build=True)
@@ -180,7 +180,7 @@ class TestToolMsvc(ToolTestCase):
             self.touch_cpp_files(hdr_files)
             cpp.LinkLibrary(src_files, res_file, target='foo',
                             batch_build=True, batch_groups=num_groups)
-            self.build_prj(prj, num_groups + 1)
+            self.build_prj(prj, num_groups )
 
     # -----------------------------------------------------------
 
@@ -225,7 +225,7 @@ class TestToolMsvc(ToolTestCase):
 
             cpp.LinkSharedLibrary(src_files, res_file, target='foo')
             cpp.LinkProgram(src_files, main_src_file, res_file, target='foo')
-            self.build_prj(prj, 3)
+            self.build_prj(prj, 1)
 
             self.touch_cpp_files(hdr_files)
 
@@ -235,7 +235,7 @@ class TestToolMsvc(ToolTestCase):
             cpp.LinkProgram(src_files, main_src_file, res_file, target='foo',
                             batch_build=True, batch_groups=num_groups)
 
-            self.build_prj(prj, num_groups + 2, jobs=1)
+            self.build_prj(prj, num_groups, jobs=1)
 
     # -----------------------------------------------------------
 

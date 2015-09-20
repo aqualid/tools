@@ -2,7 +2,7 @@ import os
 import re
 import itertools
 
-from aql import read_text_file, Tempfile, execute_command, StrOptionType,\
+from aql import read_text_file, remove_files, Tempfile, execute_command, StrOptionType,\
     ListOptionType, PathOptionType, tool, \
     ToolCommonCpp, CommonCppCompiler, CommonCppArchiver, \
     CommonCppLinker, ToolCommonRes, CommonResCompiler
@@ -47,29 +47,6 @@ def _read_deps(deps_file, exclude_dirs,
 
 # ==============================================================================
 
-# t.c:3:10: error: called object is not a function or function pointer
-# t.c:1:17: note: declared here
-#  void foo(char **p, char **q)
-
-
-def _parse_output(output,
-                  _err_re=re.compile(r"(.+):\d+:\d+:\s+error:\s+")):
-
-    failed_sources = set()
-
-    for line in output.split('\n'):
-        m = _err_re.match(line)
-        if m:
-            source_path = m.group(1)
-            failed_sources.add(source_path)
-
-    return failed_sources
-
-# ==============================================================================
-
-# noinspection PyAttributeOutsideInit
-
-
 class GccCompiler (CommonCppCompiler):
 
     def __init__(self, options):
@@ -105,12 +82,10 @@ class GccCompiler (CommonCppCompiler):
 
     # -----------------------------------------------------------
 
-    def _set_targets(self, source_entities, targets, obj_files, output):
-
-        failed_sources = _parse_output(output)
+    def _set_targets(self, source_entities, targets, obj_files):
 
         for src_value, obj_file in zip(source_entities, obj_files):
-            if src_value.get() not in failed_sources:
+            if os.path.isfile(obj_file):
                 dep_file = os.path.splitext(obj_file)[0] + '.d'
                 implicit_deps = _read_deps(dep_file, self.ext_cpppath)
 
@@ -125,6 +100,7 @@ class GccCompiler (CommonCppCompiler):
         sources = tuple(src.get() for src in source_entities)
 
         obj_files = self.get_source_target_paths(sources, ext=self.ext)
+        remove_files(obj_files)
 
         cwd = os.path.dirname(obj_files[0])
 
@@ -133,13 +109,12 @@ class GccCompiler (CommonCppCompiler):
 
         result = self.exec_cmd_result(cmd, cwd, file_flag='@')
 
-        output = result.output
-        self._set_targets(source_entities, targets, obj_files, output)
+        self._set_targets(source_entities, targets, obj_files)
 
         if result.failed():
             raise result
 
-        return output
+        return result.output()
 
 # ==============================================================================
 
@@ -274,22 +249,14 @@ def _get_target_os(target_os):
 
     return target_os
 
+
 # ==============================================================================
-
-
 def _get_gcc_specs(gcc):
-    result = execute_command([gcc, '-v'])
+    result = execute_command([gcc, '-dumpmachine'])
+    target = result.stdout.strip()
 
-    target_re = re.compile(r'^\s*Target:\s+(.+)$', re.MULTILINE)
-    version_re = re.compile(r'^\s*gcc version\s+(.+)$', re.MULTILINE)
-
-    out = result.output
-
-    match = target_re.search(out)
-    target = match.group(1).strip() if match else ''
-
-    match = version_re.search(out)
-    version = match.group(1).strip() if match else ''
+    result = execute_command([gcc, '-dumpversion'])
+    version = result.stdout.strip()
 
     target_list = target.split('-', 1)
 
