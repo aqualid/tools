@@ -45,8 +45,8 @@ def _read_deps(deps_file, exclude_dirs,
 
     return dep_files
 
-# ==============================================================================
 
+# ==============================================================================
 class GccCompiler (CommonCppCompiler):
 
     def __init__(self, options):

@@ -55,7 +55,7 @@ def _run_tests(core_dir, tests_dir, source_dir, with_coverage=True):
         cov.start()
 
     sys.path[0:0] = [core_dir]
-    result = module.run()
+    result = module.run([])
 
     if cov is not None:
         cov.stop()
@@ -114,28 +114,42 @@ def _run_cmd(cmd, path=None):
 
 
 # ==============================================================================
-def run(core_dir, tools_dir):
+def _fetch_repo(cur_dir, repo_name, repo_dir=None):
+    if repo_dir:
+        return os.path.abspath(repo_dir)
+
+    repo_dir = os.path.join(cur_dir, repo_name)
+
+    _run_cmd(["git", "clone", "-b", "master", "--depth", "1",
+              "https://github.com/aqualid/%s.git" % repo_name, repo_dir])
+
+    return repo_dir
+
+
+# ==============================================================================
+def run(core_dir, tools_dir, examples_dir, run_tests=None):
 
     tests_dir = os.path.join(tools_dir, 'tests')
     source_dir = os.path.join(tools_dir, 'tools')
 
-    with_coverage = True if __name__ == '__main__' else False
+    core_dir = _fetch_repo(tools_dir, 'aqualid', core_dir)
 
-    _run_tests(core_dir, tests_dir, source_dir, with_coverage)
+    if (run_tests is None) or 'tests' in run_tests:
+        with_coverage = True if __name__ == '__main__' else False
+        _run_tests(core_dir, tests_dir, source_dir, with_coverage)
 
-    # check for PEP8 violations, max complexity and other standards
-    _run_flake8(_find_files(source_dir), complexity=9)
+    if (run_tests is None) or 'flake8' in run_tests:
+        # check for PEP8 violations, max complexity and other standards
+        _run_flake8(_find_files(source_dir), complexity=9)
 
-    # check for PEP8 violations
-    _run_flake8(_find_files(tests_dir))
+        # check for PEP8 violations
+        _run_flake8(_find_files(tests_dir))
 
-    ###############
-    # test examples
-    examples_dir = os.path.join(tools_dir, 'examples')
-    _run_cmd(["git", "clone", "-b", "master", "--depth", "1", "https://github.com/aqualid/examples.git", examples_dir])
+    if (run_tests is None) or 'examples' in run_tests:
+        examples_dir = _fetch_repo(tools_dir, 'examples', examples_dir)
 
-    module = _load_module('run_ci', examples_dir)
-    module.run(core_dir, tools_dir, examples_dir)
+        module = _load_module('run_ci', examples_dir)
+        module.run(core_dir, tools_dir, examples_dir)
 
 
 # ==============================================================================
@@ -149,6 +163,16 @@ def _parse_args(choices):
     args_parser.add_argument('--run', action='append', choices=choices,
                              dest='run_tests',
                              help="Run specific tests")
+
+    args_parser.add_argument('--core-dir', action='store',
+                             dest='core_dir', metavar='PATH',
+                             help="Aqualid core directory. "
+                                  "By default it will be fetched from GitHub.")
+
+    args_parser.add_argument('--examples-dir', action='store',
+                             dest='examples_dir', metavar='PATH',
+                             help="Aqualid examples directory. "
+                                  "By default it will be fetched from GitHub.")
 
     return args_parser.parse_args()
 
@@ -168,12 +192,8 @@ def main():
         run_tests.difference_update(args.skip_tests)
 
     tools_dir = os.path.abspath(os.path.dirname(__file__))
-    core_dir = os.path.join(tools_dir, 'aqualid')
 
-    _run_cmd(["git", "clone", "-b", "master", "--depth", "1", "https://github.com/aqualid/aqualid.git", core_dir])
-
-    run(core_dir, tools_dir)
-
+    run(args.core_dir, tools_dir, args.examples_dir, run_tests)
 
 # ==============================================================================
 

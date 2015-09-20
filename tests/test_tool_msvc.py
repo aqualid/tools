@@ -180,7 +180,8 @@ class TestToolMsvc(ToolTestCase):
             self.touch_cpp_files(hdr_files)
             cpp.LinkLibrary(src_files, res_file, target='foo',
                             batch_build=True, batch_groups=num_groups)
-            self.build_prj(prj, num_groups )
+
+            self.build_prj(prj, num_groups)
 
     # -----------------------------------------------------------
 
