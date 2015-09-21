@@ -1,6 +1,11 @@
-Aqualid external tools [![Linux Build Status](https://travis-ci.org/aqualid/aqualid.svg?branch=master)](https://travis-ci.org/aqualid/aqualid)  [![Windows Build status](https://ci.appveyor.com/api/projects/status/07s07rddxv9r3hgc?svg=true)](https://ci.appveyor.com/project/menify/aqualid) [![Code Health](https://landscape.io/github/aqualid/aqualid/master/landscape.svg?style=flat)](https://landscape.io/github/aqualid/aqualid/master) [![CoverageStatus](https://coveralls.io/repos/aqualid/aqualid/badge.svg?branch=master)](https://coveralls.io/r/aqualid/aqualid)
+Aqualid external tools
+[![Linux Build Status](https://travis-ci.org/aqualid/tools.svg?branch=master)](https://travis-ci.org/aqualid/tools) 
+[![Windows build status](https://ci.appveyor.com/api/projects/status/ciod3udpw5k5oc1o/branch/master?svg=true)](https://ci.appveyor.com/project/menify/tools/branch/master)
+[![Coverage Status](https://coveralls.io/repos/aqualid/tools/badge.svg?branch=master&service=github)](https://coveralls.io/github/aqualid/tools?branch=master)
+
 ======================
 
 
 Aqualid external tools.
+
 Support of different compilers (like gcc, g++, msvc etc. ) and any other builders.
