@@ -43,7 +43,7 @@ def _run_tests(core_dir, tests_dir, source_dir, with_coverage=True):
     if with_coverage:
         try:
             import coverage
-        except ImportError:
+        except Exception:
             print("WARNING: Module 'coverage' has not been found")
             cov = None
         else:
@@ -69,7 +69,7 @@ def _run_tests(core_dir, tests_dir, source_dir, with_coverage=True):
 def _run_flake8(source_files, ignore=None, complexity=-1):
     try:
         import flake8.main
-    except ImportError:
+    except Exception:
         print("WARNING: Module 'flake8' has not been found")
         return
 
