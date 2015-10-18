@@ -2,8 +2,8 @@ import os
 import re
 import itertools
 
-from aql import read_text_file, remove_files, Tempfile, execute_command, StrOptionType,\
-    ListOptionType, PathOptionType, tool, \
+from aql import read_text_file, remove_files, Tempfile, execute_command,\
+    StrOptionType, ListOptionType, PathOptionType, tool, \
     ToolCommonCpp, CommonCppCompiler, CommonCppArchiver, \
     CommonCppLinker, ToolCommonRes, CommonResCompiler
 

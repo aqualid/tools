@@ -2,6 +2,7 @@
 .idea
 *.py[cod]
 *.prof
+**/.cache/
 **/__pycache__/
 **/output/
 **/build_output/
