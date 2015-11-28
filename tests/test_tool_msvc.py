@@ -116,7 +116,7 @@ class TestToolMsvc(ToolTestCase):
             src_files, hdr_files = self.generate_cpp_files(
                 src_dir, 'foo', num_src_files)
 
-            src_file_orig = Tempfile(folder=tmp_dir)
+            src_file_orig = Tempfile(root_dir=tmp_dir)
             src_file_orig.close()
 
             self.copy_file(src_files[0], src_file_orig)

@@ -60,7 +60,7 @@ class GccCompiler (CommonCppCompiler):
 
         cwd = os.path.dirname(obj_file)
 
-        with Tempfile(prefix=obj_file, suffix='.d', folder=cwd) as dep_file:
+        with Tempfile(prefix=obj_file, suffix='.d', root_dir=cwd) as dep_file:
 
             cmd = list(self.cmd)
 
