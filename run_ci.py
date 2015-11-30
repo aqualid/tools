@@ -96,7 +96,7 @@ def _run_flake8(source_files, ignore=None, complexity=-1):
 
 
 # ==============================================================================
-def _run_cmd(cmd, path=None):
+def _run_cmd_status(cmd, path=None):
 
     if path:
         env = os.environ.copy()
@@ -107,10 +107,14 @@ def _run_cmd(cmd, path=None):
     print(cmd)
 
     p = subprocess.Popen(cmd, env=env, shell=False)
-    result = p.wait()
+    return p.wait()
 
-    if result:
-        sys.exit(result)
+
+# ==============================================================================
+def _run_cmd(cmd, path=None):
+    status = _run_cmd_status(cmd, path)
+    if status:
+        sys.exit(status)
 
 
 # ==============================================================================
@@ -120,8 +124,21 @@ def _fetch_repo(cur_dir, repo_name, repo_dir=None):
 
     repo_dir = os.path.join(cur_dir, repo_name)
 
-    _run_cmd(["git", "clone", "-b", "master", "--depth", "1",
-              "https://github.com/aqualid/%s.git" % repo_name, repo_dir])
+    default_branch = 'master'
+
+    branch = os.environ.get('TRAVIS_BRANCH')
+    if not branch:
+        branch = os.environ.get('APPVEYOR_REPO_BRANCH', default_branch)
+
+    cmd = ["git", "clone", "--depth", "1",
+           "https://github.com/aqualid/%s.git" % repo_name, repo_dir]
+
+    status = _run_cmd_status(cmd + ["-b", branch])
+    if status:
+        if branch == default_branch:
+            sys.exit(status)
+
+        _run_cmd(cmd + ["-b", default_branch])
 
     return repo_dir
 
