@@ -278,9 +278,8 @@ def _get_gcc_specs(gcc):
 
     return specs
 
+
 # ==============================================================================
-
-
 def _generate_prog_names(prog, prefix, suffix):
     prefixes = [prefix, ''] if prefix else ['']
     suffixes = [suffix, ''] if suffix else ['']
@@ -288,17 +287,12 @@ def _generate_prog_names(prog, prefix, suffix):
     return tuple(prefix + prog + suffix
                  for prefix, suffix in itertools.product(prefixes, suffixes))
 
+
 # ==============================================================================
-
-
 class ToolGccCommon(ToolCommonCpp):
 
     @classmethod
     def setup(cls, options):
-
-        if options.cc_name.is_set_not_to('gcc'):
-            raise NotImplementedError()
-
         gcc_prefix = options.gcc_prefix.get()
         gcc_suffix = options.gcc_suffix.get()
 
@@ -327,8 +321,10 @@ class ToolGccCommon(ToolCommonCpp):
     # -----------------------------------------------------------
 
     @classmethod
-    def options(cls):
-        options = super(ToolGccCommon, cls).options()
+    def get_options(cls):
+        options = super(ToolGccCommon, cls).get_options()
+
+        options.cc_name = 'gcc'
 
         options.gcc_prefix = StrOptionType(
             description="GCC C/C++ compiler prefix")
@@ -483,8 +479,8 @@ class ToolWindRes(ToolCommonRes):
     # -----------------------------------------------------------
 
     @classmethod
-    def options(cls):
-        options = super(ToolWindRes, cls).options()
+    def get_options(cls):
+        options = super(ToolWindRes, cls).get_options()
 
         options.gcc_prefix = StrOptionType(
             description="GCC C/C++ compiler prefix")

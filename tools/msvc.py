@@ -313,15 +313,20 @@ def _get_msvc_specs(cl):
 class ToolMsvcCommon(ToolCommonCpp):
 
     @classmethod
-    def setup(cls, options):
+    def get_options(cls):
+        options = super(ToolMsvcCommon, cls).get_options()
 
-        if options.cc_name.is_set_not_to('msvc'):
-            raise NotImplementedError()
+        options.cc_name = 'msvc'
+        return options
+
+    # ----------------------------------------------------------
+
+    @classmethod
+    def setup(cls, options):
 
         cl = cls.find_program(options, 'cl')
         link, lib, rc = cls.find_optional_programs(options,
-                                                   ['link', 'lib', 'rc'],
-                                                   cl)
+                                                   ['link', 'lib', 'rc'], cl)
 
         specs = _get_msvc_specs(cl)
 
@@ -462,16 +467,14 @@ class ToolMsvcCommon(ToolCommonCpp):
 class ToolMsVCpp(ToolMsvcCommon):
     language = "c++"
 
+
 # ==============================================================================
-
-
 @tool('c', 'msvc', 'cc')
 class ToolMsvc(ToolMsvcCommon):
     language = "c"
 
+
 # ==============================================================================
-
-
 @tool('rc', 'msrc')
 class ToolMsrc(ToolCommonRes):
 

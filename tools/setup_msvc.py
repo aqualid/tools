@@ -12,29 +12,29 @@
 #   $HOME/.config/aqualid/tools
 #
 #
-# from aql import tool_setup, get_shell_script_env
-#
-# script=r"C:\Program Files (x86)\Microsoft Visual Studio 12\VC\vcvarsall.bat"
-#
-# @tool_setup('msvcpp','msvc++', 'msvc')
-# def   setup_msvc(cls, options):
-#
-#   if options.cc_name.is_set_not_to('msvc'):
-#     return
-#
-#   target_arch = options.target_arch
-#
-#   if not target_arch.is_set() or (target_arch == 'x86-32'):
-#     target = "x86"
-#
-#   elif target_arch == 'x86-64':
-#     target = "amd64"
-#
-#   elif target_arch == 'arm':
-#     target = "arm"
-#
-#   else:
-#     raise NotImplementedError()
-#
-#   vc_env = get_shell_script_env( script, target )
-#   options.env.update( vc_env )
+from aql import tool_setup, get_shell_script_env
+
+script = r"C:\Program Files (x86)\Microsoft Visual Studio 12\VC\vcvarsall.bat"
+
+
+@tool_setup('msvcpp', 'msvc++', 'msvc')
+def msvc_env(cls, options):
+    """
+    Sets up system environment variables.
+    :param cls: Tools class. It can be used to call static/class helpers methods
+    :param options: Tools options which allow to configure environment.
+    :return dictionary system envrironment.
+    """
+
+    if not options.target_arch.is_set():
+        target = 'x86'
+    else:
+        target_map = {
+                'x86-32': "x86",
+                'x86-64': "amd64",
+                'arm':    "arm",
+        }
+
+        target = options.target_arch.map_value(target_map)
+
+    return get_shell_script_env(script, target)

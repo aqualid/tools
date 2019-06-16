@@ -442,16 +442,18 @@ class ToolRsync(aql.Tool):
     # -----------------------------------------------------------
 
     @classmethod
-    def options(cls):
+    def get_options(cls):
         options = aql.Options()
 
         options.rsync = aql.PathOptionType(
             description="File path to rsync program.")
+
         options.rsync_cygwin = aql.BoolOptionType(
             description="Is rsync uses cygwin paths.")
 
         options.rsync_flags = aql.ListOptionType(
             description="rsync tool flags", separators=None)
+
         options.rsync_ssh_flags = aql.ListOptionType(
             description="rsync tool SSH flags", separators=None)
 
